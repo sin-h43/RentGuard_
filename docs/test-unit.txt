@@ -1,0 +1,227 @@
+
+> rentguard@1.0.0 test
+> node --env-file=.env --import tsx --test tests/unit.test.ts tests/cypher-syntax.test.ts
+
+TAP version 13
+# Subtest: Cypher syntax
+    # Subtest: CONSTRAINTS[0]
+    ok 1 - CONSTRAINTS[0]
+      ---
+      duration_ms: 69.933305
+      type: 'test'
+      ...
+    # Subtest: CONSTRAINTS[1]
+    ok 2 - CONSTRAINTS[1]
+      ---
+      duration_ms: 2.548886
+      type: 'test'
+      ...
+    # Subtest: CONSTRAINTS[2]
+    ok 3 - CONSTRAINTS[2]
+      ---
+      duration_ms: 5.447877
+      type: 'test'
+      ...
+    # Subtest: CONSTRAINTS[3]
+    ok 4 - CONSTRAINTS[3]
+      ---
+      duration_ms: 1.534885
+      type: 'test'
+      ...
+    # Subtest: CONSTRAINTS[4]
+    ok 5 - CONSTRAINTS[4]
+      ---
+      duration_ms: 1.981104
+      type: 'test'
+      ...
+    # Subtest: CONSTRAINTS[5]
+    ok 6 - CONSTRAINTS[5]
+      ---
+      duration_ms: 1.476345
+      type: 'test'
+      ...
+    # Subtest: DELETE_STAY
+    ok 7 - DELETE_STAY
+      ---
+      duration_ms: 69.190863
+      type: 'test'
+      ...
+    # Subtest: GRAPH_COUNTS
+    ok 8 - GRAPH_COUNTS
+      ---
+      duration_ms: 41.458735
+      type: 'test'
+      ...
+    # Subtest: PHONE_SPREAD
+    ok 9 - PHONE_SPREAD
+      ---
+      duration_ms: 45.762563
+      type: 'test'
+      ...
+    # Subtest: REL_COUNT
+    ok 10 - REL_COUNT
+      ---
+      duration_ms: 9.425617
+      type: 'test'
+      ...
+    # Subtest: REVIEW_COLLUSION
+    ok 11 - REVIEW_COLLUSION
+      ---
+      duration_ms: 28.18986
+      type: 'test'
+      ...
+    # Subtest: REVIEW_FARM
+    ok 12 - REVIEW_FARM
+      ---
+      duration_ms: 43.226587
+      type: 'test'
+      ...
+    # Subtest: SELF_PHOTO_REUSE
+    ok 13 - SELF_PHOTO_REUSE
+      ---
+      duration_ms: 6.542183
+      type: 'test'
+      ...
+    # Subtest: SHARED_ACCOUNT_PHONE
+    ok 14 - SHARED_ACCOUNT_PHONE
+      ---
+      duration_ms: 4.567557
+      type: 'test'
+      ...
+    # Subtest: SHARED_IDENTITY_PAIRS
+    ok 15 - SHARED_IDENTITY_PAIRS
+      ---
+      duration_ms: 16.728344
+      type: 'test'
+      ...
+    # Subtest: STAY_EDGES
+    ok 16 - STAY_EDGES
+      ---
+      duration_ms: 19.348815
+      type: 'test'
+      ...
+    # Subtest: UPSERT_LISTING
+    ok 17 - UPSERT_LISTING
+      ---
+      duration_ms: 33.194327
+      type: 'test'
+      ...
+    # Subtest: UPSERT_OWNER_ACCOUNTS
+    ok 18 - UPSERT_OWNER_ACCOUNTS
+      ---
+      duration_ms: 6.913013
+      type: 'test'
+      ...
+    # Subtest: UPSERT_REVIEW
+    ok 19 - UPSERT_REVIEW
+      ---
+      duration_ms: 4.881078
+      type: 'test'
+      ...
+    # Subtest: UPSERT_STAY
+    ok 20 - UPSERT_STAY
+      ---
+      duration_ms: 8.136337
+      type: 'test'
+      ...
+    # Subtest: UPSERT_TENANT_ACCOUNTS
+    ok 21 - UPSERT_TENANT_ACCOUNTS
+      ---
+      duration_ms: 1.655669
+      type: 'test'
+      ...
+    # Subtest: the checker really rejects broken Cypher
+    ok 22 - the checker really rejects broken Cypher
+      ---
+      duration_ms: 7.80474
+      type: 'test'
+      ...
+    1..22
+ok 1 - Cypher syntax
+  ---
+  duration_ms: 436.765265
+  type: 'suite'
+  ...
+# Subtest: algorithms
+    # Subtest: address-only overlap does not cluster owners, address + photo does
+    ok 1 - address-only overlap does not cluster owners, address + photo does
+      ---
+      duration_ms: 2.824045
+      type: 'test'
+      ...
+    # Subtest: clusters are transitive (1-2, 2-3 => {1,2,3})
+    ok 2 - clusters are transitive (1-2, 2-3 => {1,2,3})
+      ---
+      duration_ms: 0.753637
+      type: 'test'
+      ...
+    # Subtest: the later lister of a shared photo is the suspect
+    ok 3 - the later lister of a shared photo is the suspect
+      ---
+      duration_ms: 0.428649
+      type: 'test'
+      ...
+    # Subtest: personalised PageRank sums to 1 and gives isolated sybils nothing
+    ok 4 - personalised PageRank sums to 1 and gives isolated sybils nothing
+      ---
+      duration_ms: 5.125291
+      type: 'test'
+      ...
+    # Subtest: trustScores: best owner = 1, unverified-only owner = 0, no seeds = all 0
+    ok 5 - trustScores: best owner = 1, unverified-only owner = 0, no seeds = all 0
+      ---
+      duration_ms: 2.047288
+      type: 'test'
+      ...
+    # Subtest: addressKey normalises case and punctuation
+    ok 6 - addressKey normalises case and punctuation
+      ---
+      duration_ms: 0.546434
+      type: 'test'
+      ...
+    1..6
+ok 2 - algorithms
+  ---
+  duration_ms: 13.670133
+  type: 'suite'
+  ...
+# Subtest: graph pipeline on seed data
+    # Subtest: outbox consumer: every event is applied once, then the queue is empty
+    ok 1 - outbox consumer: every event is applied once, then the queue is empty
+      ---
+      duration_ms: 56.111347
+      type: 'test'
+      ...
+    # Subtest: detection finds the planted ring, the photo thief and the review farm - and no honest owner
+    ok 2 - detection finds the planted ring, the photo thief and the review farm - and no honest owner
+      ---
+      duration_ms: 47.921612
+      type: 'test'
+      ...
+    # Subtest: persisting findings is idempotent and respects dismissals
+    ok 3 - persisting findings is idempotent and respects dismissals
+      ---
+      duration_ms: 56.742678
+      type: 'test'
+      ...
+    # Subtest: trust propagation: verified-tenant owners > 0, sybil review ring = 0, written back to SQL
+    ok 4 - trust propagation: verified-tenant owners > 0, sybil review ring = 0, written back to SQL
+      ---
+      duration_ms: 18.185805
+      type: 'test'
+      ...
+    1..4
+ok 3 - graph pipeline on seed data
+  ---
+  duration_ms: 242.511951
+  type: 'suite'
+  ...
+1..3
+# tests 32
+# suites 3
+# pass 32
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4191.257595

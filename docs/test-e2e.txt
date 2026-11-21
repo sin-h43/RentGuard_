@@ -1,0 +1,173 @@
+
+> rentguard@1.0.0 test:e2e
+> node --env-file=.env --import tsx tests/e2e.test.ts
+
+TAP version 13
+# Subtest: public + auth + role guards
+    # Subtest: lists seeded listings and supports full-text search and filters
+    ok 1 - lists seeded listings and supports full-text search and filters
+      ---
+      duration_ms: 151.473122
+      type: 'test'
+      ...
+    # Subtest: hides street address and phone from anonymous visitors
+    ok 2 - hides street address and phone from anonymous visitors
+      ---
+      duration_ms: 50.000595
+      type: 'test'
+      ...
+    # Subtest: SQL-injection style input is treated as data, not code
+    ok 3 - SQL-injection style input is treated as data, not code
+      ---
+      duration_ms: 47.473023
+      type: 'test'
+      ...
+    # Subtest: protected API and pages require login
+    ok 4 - protected API and pages require login
+      ---
+      duration_ms: 174.246928
+      type: 'test'
+      ...
+    # Subtest: registration validates input (app level) and the database (unique e-mail)
+    ok 5 - registration validates input (app level) and the database (unique e-mail)
+      ---
+      duration_ms: 323.837849
+      type: 'test'
+      ...
+    # Subtest: passwords are stored as bcrypt hashes, never plain text
+    ok 6 - passwords are stored as bcrypt hashes, never plain text
+      ---
+      duration_ms: 60.56026
+      type: 'test'
+      ...
+    # Subtest: wrong passwords are rejected, repeated attempts are rate-limited
+    ok 7 - wrong passwords are rejected, repeated attempts are rate-limited
+      ---
+      duration_ms: 1111.411922
+      type: 'test'
+      ...
+    # Subtest: roles are enforced: a tenant cannot reach owner or admin endpoints
+    ok 8 - roles are enforced: a tenant cannot reach owner or admin endpoints
+      ---
+      duration_ms: 143.046544
+      type: 'test'
+      ...
+    1..8
+ok 1 - public + auth + role guards
+  ---
+  duration_ms: 2066.008349
+  type: 'suite'
+  ...
+# Subtest: owner -> tenant -> escrow -> lease flow
+    # Subtest: owner signs up, adds a property and publishes version 1 with an uploaded photo
+    ok 1 - owner signs up, adds a property and publishes version 1 with an uploaded photo
+      ---
+      duration_ms: 231.912722
+      type: 'test'
+      ...
+    # Subtest: another owner cannot publish to this property
+    ok 2 - another owner cannot publish to this property
+      ---
+      duration_ms: 50.316344
+      type: 'test'
+      ...
+    # Subtest: listing appears in public search with the uploaded photo
+    ok 3 - listing appears in public search with the uploaded photo
+      ---
+      duration_ms: 19.755469
+      type: 'test'
+      ...
+    # Subtest: tenant enquires; duplicate enquiry for the same version is rejected
+    ok 4 - tenant enquires; duplicate enquiry for the same version is rejected
+      ---
+      duration_ms: 185.717141
+      type: 'test'
+      ...
+    # Subtest: escrow: amount rules, idempotent payment, one-time OTP, two-party release
+    ok 5 - escrow: amount rules, idempotent payment, one-time OTP, two-party release
+      ---
+      duration_ms: 147.304897
+      type: 'test'
+      ...
+    # Subtest: lease: created at the rent the tenant saw; overlapping lease rejected; early review rejected
+    ok 6 - lease: created at the rent the tenant saw; overlapping lease rejected; early review rejected
+      ---
+      duration_ms: 97.55155
+      type: 'test'
+      ...
+    1..6
+ok 2 - owner -> tenant -> escrow -> lease flow
+  ---
+  duration_ms: 733.600834
+  type: 'suite'
+  ...
+# Subtest: fraud triggers, dispute evidence and admin actions
+    # Subtest: price hike right after an enquiry is flagged by a database trigger
+    ok 1 - price hike right after an enquiry is flagged by a database trigger
+      ---
+      duration_ms: 469.608848
+      type: 'test'
+      ...
+    # Subtest: keepPhotos cannot claim a photo that never belonged to this property
+    ok 2 - keepPhotos cannot claim a photo that never belonged to this property
+      ---
+      duration_ms: 32.292169
+      type: 'test'
+      ...
+    # Subtest: tenant sees the change and gets bitemporal evidence; hash chain intact
+    ok 3 - tenant sees the change and gets bitemporal evidence; hash chain intact
+      ---
+      duration_ms: 67.939656
+      type: 'test'
+      ...
+    # Subtest: three different tenants complaining about one owner trigger a HIGH_COMPLAINTS flag
+    ok 4 - three different tenants complaining about one owner trigger a HIGH_COMPLAINTS flag
+      ---
+      duration_ms: 471.191432
+      type: 'test'
+      ...
+    # Subtest: admin reviews flags: confirming a property flag takes the listing offline
+    ok 5 - admin reviews flags: confirming a property flag takes the listing offline
+      ---
+      duration_ms: 89.524881
+      type: 'test'
+      ...
+    # Subtest: admin: complaints workflow and user verification
+    ok 6 - admin: complaints workflow and user verification
+      ---
+      duration_ms: 56.980621
+      type: 'test'
+      ...
+    # Subtest: SQL insights run and the ledger balances (debits = credits)
+    ok 7 - SQL insights run and the ledger balances (debits = credits)
+      ---
+      duration_ms: 15.004815
+      type: 'test'
+      ...
+    # Subtest: graph endpoints degrade gracefully when Neo4j is not configured
+    ok 8 - graph endpoints degrade gracefully when Neo4j is not configured
+      ---
+      duration_ms: 24.474688
+      type: 'test'
+      ...
+    # Subtest: logout clears the session
+    ok 9 - logout clears the session
+      ---
+      duration_ms: 60.657547
+      type: 'test'
+      ...
+    1..9
+ok 3 - fraud triggers, dispute evidence and admin actions
+  ---
+  duration_ms: 1288.557033
+  type: 'suite'
+  ...
+1..3
+# tests 23
+# suites 3
+# pass 23
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4096.270677
