@@ -1,0 +1,27 @@
+flowchart LR
+  subgraph Browser
+    UI["Next.js pages<br/>tenant / owner / admin"]
+  end
+  subgraph Server["Next.js server (App Router)"]
+    MW["middleware.ts<br/>JWT cookie + role guard"]
+    API["Route Handlers /api/*<br/>zod validation + RBAC"]
+    GA["graph layer<br/>sync · detect · trust"]
+  end
+  subgraph PG["PostgreSQL - system of record"]
+    T["tables + constraints<br/>CHECK · FK · EXCLUDE"]
+    TR["triggers<br/>hash chain · flags · ledger · outbox"]
+    SP["stored procedures<br/>publish · escrow"]
+    V["views + FTS (GIN)"]
+    OB[("graph_outbox")]
+  end
+  subgraph NEO["Neo4j - derived graph"]
+    G["Owner · Tenant · Property<br/>Phone · Address · Photo"]
+  end
+  UI --> MW --> API
+  API -->|"SQL / CALL"| SP
+  API --> V
+  SP --> T --> TR --> OB
+  OB -->|"outbox consumer (at-least-once, idempotent MERGE)"| GA
+  GA -->|"Cypher"| G
+  G -->|"rings, trust scores"| GA
+  GA -->|"fraud_flag, trust_score"| T
