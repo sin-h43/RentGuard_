@@ -1,0 +1,37 @@
+# Local databases for development / demo.
+#   cp .env.example .env   (set POSTGRES_PASSWORD and NEO4J_PASSWORD)
+#   docker compose up -d
+# Postgres loads db/01_listing.sql, db/02_workflow.sql, then db/seed.sql automatically on first start.
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: rentguard
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: rentguard
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db/01_listing.sql:/docker-entrypoint-initdb.d/01-listing.sql:ro
+      - ./db/02_workflow.sql:/docker-entrypoint-initdb.d/02-workflow.sql:ro
+      - ./db/seed.sql:/docker-entrypoint-initdb.d/03-seed.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rentguard"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  neo4j:
+    image: neo4j:5-community
+    environment:
+      NEO4J_AUTH: neo4j/${NEO4J_PASSWORD:?set NEO4J_PASSWORD in .env}
+    ports:
+      - "7474:7474"   # browser UI
+      - "7687:7687"   # bolt
+    volumes:
+      - neo4jdata:/data
+
+volumes:
+  pgdata:
+  neo4jdata:
