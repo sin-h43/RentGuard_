@@ -1,0 +1,161 @@
+erDiagram
+    APP_USER ||--o| OWNER_PROFILE : "is owner"
+    APP_USER ||--o| TENANT_PROFILE : "is tenant"
+    OWNER_PROFILE ||--o{ PROPERTY : owns
+    PROPERTY ||--|{ LISTING_VERSION : "has append-only history"
+    LISTING_VERSION ||--o{ LISTING_PHOTO : contains
+    TENANT_PROFILE ||--o{ INQUIRY : makes
+    PROPERTY ||--o{ INQUIRY : receives
+    LISTING_VERSION ||--o{ INQUIRY : "version seen by tenant"
+    INQUIRY ||--o| ESCROW : "secured by"
+    TENANT_PROFILE ||--o{ ESCROW : pays
+    OWNER_PROFILE ||--o{ ESCROW : receives
+    ESCROW ||--|{ LEDGER_ENTRY : "posts double-entry"
+    TENANT_PROFILE ||--o{ LEASE : signs
+    PROPERTY ||--o{ LEASE : "let under"
+    LISTING_VERSION ||--o{ LEASE : "agreed terms"
+    LEASE ||--o| REVIEW : "may receive"
+    TENANT_PROFILE ||--o{ COMPLAINT : files
+    PROPERTY ||--o{ COMPLAINT : "subject of"
+    OWNER_PROFILE ||--o{ FRAUD_FLAG : "flagged"
+    PROPERTY ||--o{ FRAUD_FLAG : "flagged"
+    APP_USER ||--o{ FRAUD_FLAG : "admin reviews"
+
+    APP_USER {
+        bigint user_id PK
+        text email UK
+        text password_hash
+        user_role role
+        text full_name
+        text phone
+        boolean phone_verified
+        boolean is_active
+        timestamptz created_at
+    }
+    OWNER_PROFILE {
+        bigint owner_id PK, FK
+        user_role role "CHECK = OWNER"
+        boolean kyc_verified
+        numeric trust_score "from Neo4j, 0..1"
+        timestamptz trust_updated_at
+    }
+    TENANT_PROFILE {
+        bigint tenant_id PK, FK
+        user_role role "CHECK = TENANT"
+        text occupation
+        boolean id_verified
+    }
+    PROPERTY {
+        bigint property_id PK
+        bigint owner_id FK
+        text property_type
+        boolean is_active
+        timestamptz created_at
+    }
+    LISTING_VERSION {
+        bigint version_id PK
+        bigint property_id FK
+        int seq "UK with property_id"
+        text title
+        numeric monthly_rent
+        numeric security_deposit
+        text address_line
+        text locality
+        text city
+        char pincode
+        text contact_phone
+        jsonb amenities
+        date effective_from "valid time"
+        timestamptz recorded_at "transaction time"
+        bigint recorded_by FK
+        text photo_digest
+        text prev_hash
+        text row_hash
+    }
+    LISTING_PHOTO {
+        bigint photo_id PK
+        bigint version_id FK
+        text url
+        char sha256
+        smallint position
+    }
+    INQUIRY {
+        bigint inquiry_id PK
+        bigint tenant_id FK
+        bigint property_id FK
+        bigint seen_version_id FK
+        text message
+        timestamptz created_at
+    }
+    ESCROW {
+        bigint escrow_id PK
+        bigint inquiry_id FK, UK
+        bigint tenant_id FK
+        bigint owner_id FK
+        numeric amount
+        escrow_status status
+        text otp_hash
+        timestamptz otp_expires_at
+        timestamptz tenant_checkin_at
+        timestamptz owner_checkin_at
+        uuid idempotency_key UK
+        timestamptz created_at
+        timestamptz resolved_at
+    }
+    LEDGER_ENTRY {
+        bigint entry_id PK
+        uuid txn_group
+        bigint escrow_id FK
+        ledger_account account
+        char direction "D or C"
+        numeric amount
+        timestamptz posted_at
+    }
+    LEASE {
+        bigint lease_id PK
+        bigint property_id FK
+        bigint tenant_id FK
+        bigint agreed_version_id FK
+        date start_date
+        date end_date
+        numeric monthly_rent
+        numeric security_deposit
+        lease_status status
+    }
+    REVIEW {
+        bigint review_id PK
+        bigint lease_id FK, UK
+        bigint tenant_id FK
+        smallint rating
+        text comment
+        timestamptz created_at
+    }
+    COMPLAINT {
+        bigint complaint_id PK
+        bigint property_id FK
+        bigint filed_by FK
+        text category
+        text description
+        complaint_status status
+        bigint resolved_by FK
+        timestamptz created_at
+    }
+    FRAUD_FLAG {
+        bigint flag_id PK
+        bigint owner_id FK
+        bigint property_id FK
+        text flag_type
+        smallint severity
+        text source "SQL_TRIGGER or GRAPH"
+        flag_status status
+        jsonb evidence
+        bigint reviewed_by FK
+        timestamptz created_at
+    }
+    GRAPH_OUTBOX {
+        bigint outbox_id PK
+        text event_type
+        jsonb payload
+        timestamptz created_at
+        timestamptz processed_at
+    }
