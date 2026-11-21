@@ -1,0 +1,35 @@
+{
+  "name": "rentguard",
+  "version": "1.0.0",
+  "private": true,
+  "description": "PG / apartment rental aggregator with tamper-evident listings, escrow and graph-based fraud detection",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "db:setup": "psql \"$DATABASE_URL\" -v ON_ERROR_STOP=1 -q -f db/01_listing.sql -f db/02_workflow.sql -f db/seed.sql",
+    "db:reset": "psql \"$DATABASE_URL\" -v ON_ERROR_STOP=1 -q -c 'DROP SCHEMA public CASCADE; CREATE SCHEMA public;' && npm run db:setup",
+    "graph:sync": "node --env-file=.env --import tsx scripts/graph-sync.ts",
+    "test": "node --env-file=.env --import tsx --test tests/unit.test.ts tests/cypher-syntax.test.ts",
+    "test:e2e": "node --env-file=.env --import tsx tests/e2e.test.ts"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "jose": "^6.0.0",
+    "neo4j-driver": "^5.28.1",
+    "next": "^15.5.0",
+    "pg": "^8.13.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@neo4j-cypher/language-support": "^2.0.0-next.6",
+    "@types/node": "^22.10.0",
+    "@types/pg": "^8.11.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.9.0"
+  }
+}
